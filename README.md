@@ -1,18 +1,20 @@
-# Nexhacks PiCar LiveKit Agent
+# Nexhacks: Autonomous DriveBot
 
-Hackathon project for **NExhacks**: a Raspberry Pi–powered robotic car that connects to LiveKit, streams live video, and accepts voice + UI commands in real time. The frontend provides a clean operator console with a robot camera view on the left and command controls on the right.
+Hackathon project for **Nexhacks**: a Raspberry Pi–powered robotic car that connects to LiveKit, streams live video, and accepts voice + UI commands in real time. The frontend provides a clean operator console with a robot camera view on the left and command controls on the right.
 
 ## What it does
 - Two-way, low-latency voice conversation with a LiveKit agent.
 - Live robot camera streaming from the Pi to the web UI.
 - Remote control commands (drive, stop, pan/tilt camera) over LiveKit data channels.
 - Optional vision description using an LLM (if `OPENAI_API_KEY` is configured).
+- ArUco marker detection, distance estimation, and autonomous navigation (demo mode).
 
 ## Architecture
-1) **Raspberry Pi Agent** (`backend/agent.py`)
+1) **Raspberry Pi Agent** (`backend/agent.py` or `backend/demo.py`)
    - LiveKit Agents runtime
    - PiCar-X motion control via Python scripts
    - Picamera2 stream piped to LiveKit video track
+   - Demo mode adds ArUco detection + autonomous navigation
 2) **LiveKit Cloud**
    - Room/session orchestration, audio/video, and data channels
 3) **Web Frontend** (`car-frontend/`)
@@ -25,6 +27,7 @@ Hackathon project for **NExhacks**: a Raspberry Pi–powered robotic car that co
 - Camera movement: `servo_pan`, `servo_tilt`, `camera_center`
 - Camera view: `camera_look_left`, `camera_look_right`, `camera_look_up`, `camera_look_down`
 - Vision: `describe_view`
+- Demo (ArUco): `detect_aruco`, `navigate_to_marker`, `navigate_to_object`, `stop_navigation`, `list_objects`
 
 Commands are sent via LiveKit data channel topic `car-control`.
 
@@ -43,7 +46,7 @@ Create a LiveKit Cloud project and grab:
 
 ### 2) Raspberry Pi agent
 On the Pi:
-1. Copy the control scripts in `backend/` to your target path or update the constants in `backend/agent.py` to match your file locations.
+1. Copy the control scripts in `backend/` to your target path or update the constants in `backend/agent.py` / `backend/demo.py` to match your file locations.
 2. Create `.env.local` next to `backend/agent.py` with at least:
    ```env
    LIVEKIT_URL=...
@@ -64,6 +67,20 @@ On the Pi:
    ```bash
    python backend/agent.py
    ```
+
+### Demo mode (ArUco navigation)
+Use `backend/demo.py` for object tracking and autonomous navigation to ArUco markers.
+
+Tracked markers:
+- Marker 0: `monster_drink`
+- Marker 1: `water_bottle`
+- Marker 2: `cube`
+- Marker 3: `laptop`
+
+Start demo mode:
+```bash
+python backend/demo.py
+```
 
 ### 3) Frontend
 From your laptop:
