@@ -2,6 +2,9 @@
 
 Hackathon project for **Nexhacks**: a Raspberry Pi–powered robotic car that connects to LiveKit, streams live video, and accepts voice + UI commands in real time. The frontend provides a clean operator console with a robot camera view on the left and command controls on the right.
 
+## Video Demo
+[![Robotic Car Demo](https://img.youtube.com/vi/fd6o90UWnfs/hqdefault.jpg)](https://www.youtube.com/watch?v=fd6o90UWnfs)
+
 ## What it does
 - Two-way, low-latency voice conversation with a LiveKit agent.
 - Live robot camera streaming from the Pi to the web UI.
